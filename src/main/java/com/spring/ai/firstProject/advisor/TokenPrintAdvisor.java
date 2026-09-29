@@ -18,15 +18,22 @@ public class TokenPrintAdvisor implements CallAdvisor, StreamAdvisor {
     @Override
     public ChatClientResponse adviseCall(ChatClientRequest chatClientRequest, CallAdvisorChain callAdvisorChain) {
         this.logger.info("My token filter adviosr called ::"+chatClientRequest.toString());
+        this.logger.info("My tokenPrint Advisor::"+ chatClientRequest.prompt().getContents());
+
         ChatClientResponse response = callAdvisorChain.nextCall(chatClientRequest);
+
         this.logger.info("My token filter adviosr called  with the response::"+response.toString());
+        this.logger.info("Response :"+response.chatResponse().getResult().getOutput().getText());
+        this.logger.info("Total token consumed :"+
+                response.chatResponse().getMetadata().getUsage().getTotalTokens());
+
 
         return response;
     }
 
     @Override
     public String getName() {
-        return "";
+        return this.getClass().getName();
     }
 
     @Override
@@ -36,6 +43,7 @@ public class TokenPrintAdvisor implements CallAdvisor, StreamAdvisor {
 
     @Override
     public Flux<ChatClientResponse> adviseStream(ChatClientRequest chatClientRequest, StreamAdvisorChain streamAdvisorChain) {
-        return null;
+
+        return streamAdvisorChain.nextStream(chatClientRequest);
     }
 }
