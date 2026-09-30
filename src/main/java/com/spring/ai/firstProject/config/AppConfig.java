@@ -26,12 +26,17 @@ public class AppConfig {
 
     
 
+    @Bean
+    public ChatMemory chatMemory() {
+        return MessageWindowChatMemory.builder()
+                .maxMessages(10)
+                .build();
+    }
 
     @Bean
     public ChatClient chatClient(ChatClient.Builder chatClientBuilder,ChatMemory chatMemory) {
 
         this.logger.info("Chat Memory Implementation class::"+chatMemory.getClass().getName());
-
         MessageChatMemoryAdvisor messageChatAdvisor = MessageChatMemoryAdvisor.builder(chatMemory).build();
 
 
